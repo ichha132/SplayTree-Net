@@ -74,25 +74,32 @@ class BST_SplayNet {
         }
         int cost = 0;
         common_ancestor = node;        //nodeSet[0]=common_ancester
+       // System.out.println("line 77 common ancestor="+common_ancestor.key);
         while (node != null && node.key != u)        //Finding Node(u)
         {
             if (u < node.key) {
                 node = node.left;
                 cost++;
-            } else {
+              //  System.out.println("line 83 cost="+cost+" node.key="+node.key);
+            }
+            else {
                 node = node.right;
                 cost++;
+               // System.out.println("line 88 cost="+cost+" node.key="+node.key);
             }
         }
         node = common_ancestor;    //nodeSet[1]=uNode
+       // System.out.println("line 92 common ancestor="+common_ancestor.key);
         while (node != null && node.key != v)        //Finding Node(u)
         {
-            if (u < node.key) {
+            if (v < node.key) {
                 node = node.left;
                 cost++;
+               // System.out.println("line 97 cost="+cost+" node.key="+node.key);
             } else {
                 node = node.right;
                 cost++;
+              //  System.out.println("line 101 cost="+cost+" node.key="+node.key);
             }
         }
         return cost;
@@ -100,33 +107,51 @@ class BST_SplayNet {
 
     public void commute(int u, int v)        //Assuming u amd v always exist in the tree && u<=v
     {
-        Node nodeSet[] = findNodes(u, v);    //Node[0]=common_ancester; Node[1]=Node(u)
-        BST_SplayNet.Node common_ancester = nodeSet[0];
-        BST_SplayNet.Node uNode = nodeSet[1];
-        common_ancester = splay(common_ancester, u);
-        this.printPreorder(this.root);          //Print tree in preorder fashion
-        System.out.println();
+
+        Node nodeSet[] = findNodes(u, v);    //Node[0]=common_ancestor; Node[1]=Node(u); NodeSet[2]=parent of common_ancestor
+        Node common_ancester = nodeSet[0];
+        Node uNode = nodeSet[1];
+        Node parent_CA=nodeSet[2];
+        if(parent_CA.key>common_ancester.key) {
+            parent_CA.left = splay(common_ancester, u);
+        }
+        else if(parent_CA.key<common_ancester.key)
+        {
+            parent_CA.right=splay(common_ancester,u);
+        }
+        else
+        {
+            this.root=splay(this.root,u);
+        }
+       // System.out.println("after splay1:");
+       // this.printPreorder(this.root);          //Print tree in preorder fashion
+        //System.out.println();
         if (u == v)
             return;
         uNode.right = splay(uNode.right, v);          //if v is not there, node closest to v will come to uNode
-        this.printPreorder(this.root);
-        System.out.println();
+        //System.out.println("after splay2:");
+        //this.printPreorder(this.root);
+        //System.out.println();
     }
 
-    public BST_SplayNet.Node[] findNodes(int u, int v)        // Returns an array with common ancester of u an v and BST.Node of u
+    public Node[] findNodes(int u, int v)        // Returns an array with common ancester of u an v and Node of u
     {
         Node node = this.root;
-        Node[] nodeSet = new BST_SplayNet.Node[2];
+        Node[] nodeSet = new Node[3];
+        Node parent_CA=node;
         //Property used => u<=common_ancester<=v always
         while (node != null && ((u > node.key && v > node.key) || (u < node.key && v < node.key))) {
             if (u > node.key && v > node.key)     // if current_node<u<=v ... Go right
             {
+                parent_CA=node;
                 node = node.right;
             } else if (u < node.key && v < node.key)//if u<=v<current_node ... Go left
             {
+                parent_CA=node;
                 node = node.left;
             }
         }
+        nodeSet[2]=parent_CA;
         nodeSet[0] = node;        //nodeSet[0]=common_ancester
         while (node != null && node.key != u)        //Finding Node(u)
         {

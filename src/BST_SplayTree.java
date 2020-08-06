@@ -138,7 +138,7 @@ public class BST_SplayTree<Key extends Comparable<Key>, Value> {
         return x;
     }
 
-    public void printPreorder(BST_SplayNet.Node node) {
+    public void printPreorder(Node node) {
         if (node == null)
             return;
 
