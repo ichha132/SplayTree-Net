@@ -41,7 +41,29 @@ public class BST_SplayTree<Key extends Comparable<Key>, Value> {
             root = n;
         }
     }
+    // THis insert function does not splay every new node to the root, instead stores it in the leaf
+    void insert_without_splay(int key) {
+        root = insertRec(root, key);
+    }
 
+    /* A recursive function to insert a new key in BST */
+    Node insertRec(Node root, int key) {
+
+        /* If the tree is empty, return a new node */
+        if (root == null) {
+            root = new Node(key);
+            return root;
+        }
+
+        /* Otherwise, recur down the tree */
+        if (key < root.key)
+            root.left = insertRec(root.left, key);
+        else if (key > root.key)
+            root.right = insertRec(root.right, key);
+
+        /* return the (unchanged) node pointer */
+        return root;
+    }
 
     /***************************************************************************
      *  Splay tree Search.
@@ -116,6 +138,29 @@ public class BST_SplayTree<Key extends Comparable<Key>, Value> {
                 return rotateLeft(h);   //Left rotate
         } else return h;
     }
+
+    public BST_SplayTree copy()
+    {
+        BST_SplayTree copy=new BST_SplayTree();
+        this.makeCopy(copy,this.root);
+        return copy;
+    }
+    private void makeCopy(BST_SplayTree copy, Node node)
+    {
+        if (node == null)
+            return;
+
+        /* first print data of node */
+        copy.insert_without_splay(node.key);
+        //System.out.print(node.key + " ");
+
+        /* then recur on left sutree */
+        makeCopy(copy,node.left);
+
+        /* now recur on right subtree */
+        makeCopy(copy,node.right);
+    }
+
 
 
     /***************************************************************************

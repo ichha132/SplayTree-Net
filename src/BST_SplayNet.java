@@ -209,6 +209,28 @@ class BST_SplayNet {
         } else return h;
     }
 
+    public BST_SplayNet copy()
+    {
+        BST_SplayNet copy=new BST_SplayNet();
+        this.makeCopy(copy,this.root);
+        return copy;
+    }
+    private void makeCopy(BST_SplayNet  copy, Node node)
+    {
+        if (node == null)
+            return;
+
+        /* first print data of node */
+        copy.insert(node.key);
+        //System.out.print(node.key + " ");
+
+        /* then recur on left sutree */
+        makeCopy(copy,node.left);
+
+        /* now recur on right subtree */
+        makeCopy(copy,node.right);
+    }
+
 
     private BST_SplayNet.Node rotateRight(BST_SplayNet.Node h) {
         BST_SplayNet.Node x = h.left;

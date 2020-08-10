@@ -14,11 +14,13 @@ public class LazySplayTree {
         this.threshold_cost=threshold_cost;
         this.communication_requests=communication_requests;
         this.splayTree=splayTree;
+        /* Print statements for testing
 //        this.original_tree.root=this.original_tree.splay(this.original_tree.root,7);
 //        System.out.println("original tree after change");
 //        this.original_tree.printPreorder(this.original_tree.root);
 //        System.out.println("splay Tree");
 //        this.splayTree.printPreorder(this.splayTree.root);
+         */
     }
     int total_routing_cost=0;
     int epoch_routing_cost=0;
@@ -35,34 +37,29 @@ public class LazySplayTree {
     }
     private void laziness_prop_recur(BST_SplayTree tree, int iter)
     {
-       // BST_SplayTree temp=new BST_SplayTree();
-        System.out.print("tree that entered: ");
-        tree.printPreorder(tree.root);
-        System.out.println();
         if (iter>=communication_requests.length)
         {
             tree.printPreorder(tree.root);
             return;
         }
         int u=communication_requests[iter];
-        //System.out.println(tree.root);
         int cost=tree.search_cost(u);
-        //temp=tree;
-        System.out.println("cost for "+u+" ="+cost);
-        System.out.println("tree before splaying :");
-        tree.printPreorder(tree.root);
+        /*Print statements for testing
+//        System.out.println("tree before splaying :");
+//        tree.printPreorder(tree.root);
+//        this.splayTree.root=this.splayTree.splay(this.splayTree.root,u);
+//        System.out.println("tree after splaying :");
+//        tree.printPreorder(tree.root);
+         */
         this.splayTree.root=this.splayTree.splay(this.splayTree.root,u);
-        System.out.println("tree after splaying :");
-        tree.printPreorder(tree.root);
         total_routing_cost=total_routing_cost+cost;
         epoch_routing_cost=epoch_routing_cost+cost;
-        System.out.println("epoch cost="+epoch_routing_cost);
+       // System.out.println("epoch cost="+epoch_routing_cost);
         if(epoch_routing_cost>=threshold_cost)
         {
-          //  System.out.println("entered for ="+u);
             adjustment_cost+=threshold_cost;
             epoch_routing_cost=epoch_routing_cost-threshold_cost;
-            laziness_prop_recur(this.splayTree,++iter);
+            laziness_prop_recur(this.splayTree.copy(),++iter);
         }
         else
         {
@@ -72,6 +69,27 @@ public class LazySplayTree {
 
     public static void main(String[] args)
     {
+        /* Input Type
+        Line 1--> number of nodes in the input tree (eg. m)
+        Line 2--> list keys of all nodes present in the tree (m integers)
+        Line 3--> number of search queries (eg, n)
+        Line 4 --> n integers (keys that are to be queried)
+        Line 5--> threshold value (value of a or alpha) -- single integer
+        Eg of input :-
+        7
+        5 2 3 7 1 10 0
+        6
+        0 3 1 2 5 2
+        5
+        Corresponding output:
+        original Tree:
+        0 1 7 2 5 3 10
+        Final tree:
+        5 3 2 1 0 7 10
+        total_routing_cost=12
+        epoch_routing_cost=2
+        adjustment_cost=10
+         */
         Scanner s=new Scanner(System.in);
         int totNodes=s.nextInt();
         BST_SplayTree input_tree=new BST_SplayTree();

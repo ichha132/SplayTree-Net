@@ -42,7 +42,7 @@ public class LazySplayNet {
     }
     private void laziness_prop_recur(BST_SplayNet tree, int iter)
     {
-         /*  Print statements for testing
+        /*  Print statements for testing
 //        System.out.print("tree that entered: ");
 //        tree.printPreorder(tree.root);
 //        System.out.println();
@@ -69,12 +69,12 @@ public class LazySplayNet {
 
         total_routing_cost=total_routing_cost+cost;
         epoch_routing_cost=epoch_routing_cost+cost;
-        System.out.println(epoch_routing_cost);
+       // System.out.println(epoch_routing_cost);
         if(epoch_routing_cost>=threshold_cost)              //checks is epoch_cost exceeds 'a'
         {
              adjustment_cost+=threshold_cost;
              epoch_routing_cost=epoch_routing_cost-threshold_cost;
-             laziness_prop_recur(splayNet,++iter);          //if epoch_cost exceeds 'a' changed tree is used for next query
+             laziness_prop_recur(splayNet.copy(),++iter);          //if epoch_cost exceeds 'a' changed tree is used for next query
             //PASS BY REFERENCE ISSUE
         }
         else
@@ -108,7 +108,7 @@ public class LazySplayNet {
         original Tree:
         5 2 1 0 3 7 10
         Final tree:
-        1 0 7 5 2 3 10
+        2 0 1 5 3 7 10
         total_routing_cost=9
         epoch_routing_cost=4
         adjustment_cost=5
